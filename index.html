@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#090b12" />
+    <meta name="description" content="Explore Mandelbrot and Newton fractals in real time." />
+    <title>forma — fractal explorer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="#" aria-label="Forma, home"><span class="brand-mark">f</span><span>forma<span class="brand-dot">.</span></span></a>
+        <div class="topbar-center"><span class="live-dot"></span> FRACTAL FIELD NOTES <span class="topbar-divider">/</span> EST. 1980</div>
+        <a class="about-link" href="#about">What am I looking at? <span aria-hidden="true">↗</span></a>
+      </header>
+
+      <main>
+        <section class="intro">
+          <div class="eyebrow"><span>01</span><span class="eyebrow-line"></span> MATHEMATICS, MADE VISIBLE</div>
+          <h1>Infinity<br />takes <em>shape.</em></h1>
+          <p class="intro-copy">Explore the edge of a world that never ends.<br class="desktop-break" /> Every detail begins with a simple equation.</p>
+        </section>
+
+        <section class="workspace" aria-label="Interactive fractal explorer">
+          <div class="mode-switch" role="group" aria-label="Fractal type">
+            <button class="mode-button active" data-mode="mandelbrot" type="button"><span class="mode-glyph">M</span><span><b>Mandelbrot</b><small>Parameter space</small></span></button>
+            <button class="mode-button" data-mode="newton" type="button"><span class="mode-glyph newton-glyph">N</span><span><b>Newton</b><small>Roots &amp; basins</small></span></button>
+            <span class="mode-note" id="modeNote">z<sub>n+1</sub> = z<sub>n</sub><sup>2</sup> + c</span>
+          </div>
+          <div class="canvas-panel">
+            <div class="canvas-topline">
+              <div class="canvas-label"><span class="live-dot"></span> COMPLEX PLANE <span class="separator">·</span> <span id="renderState">READY TO EXPLORE</span></div>
+              <div class="canvas-dimensions" id="dimensions">— × — PX</div>
+            </div>
+            <div class="canvas-wrap" id="canvasWrap">
+              <canvas id="fractal" aria-label="Interactive fractal visualization"></canvas>
+              <div class="canvas-loading" id="loading"><span class="loader-ring"></span><span>TRACING INFINITY</span></div>
+              <div class="canvas-hint" id="canvasHint"><span>＋</span> CLICK TO ZOOM <i></i> DRAG TO PAN</div>
+              <div class="zoom-readout" id="zoomReadout">1.0×</div>
+            </div>
+            <div class="canvas-footline">
+              <div class="coordinate-readout"><span class="foot-label">CENTER</span><span id="centerReadout">−0.500000, 0.000000i</span></div>
+              <button class="text-button" id="resetView" type="button"><span>↺</span> RESET VIEW</button>
+            </div>
+          </div>
+
+          <aside class="controls-panel" aria-label="Controles de visualización">
+            <div class="panel-heading"><div><span class="eyebrow-small">YOUR CANVAS</span><h2>Shape<br />the view.</h2></div><span class="panel-index">A—01</span></div>
+            <div class="control-section equation-section" id="equationSection" hidden>
+              <div class="section-label"><span>01</span> CHOOSE AN EQUATION</div>
+              <label class="equation-label" for="equationSelect">Example functions</label>
+              <select id="equationSelect" class="equation-select">
+                <option value="z^3 - 1">z³ − 1 · three roots</option>
+                <option value="z^5 - 1">z⁵ − 1 · five roots</option>
+                <option value="z^4 - 1">z⁴ − 1 · four roots</option>
+                <option value="z^3 - z">z³ − z · three real roots</option>
+                <option value="z^4 + z^2 - 1">z⁴ + z² − 1</option>
+                <option value="custom">Write your own…</option>
+              </select>
+              <label class="equation-label custom-equation-label" for="equationInput">Function f(z)</label>
+              <div class="equation-input-wrap"><input id="equationInput" type="text" value="z^3 - 1" autocomplete="off" spellcheck="false" aria-describedby="equationHelp" /><button id="applyEquation" type="button" aria-label="Apply equation">↵</button></div>
+              <div class="equation-help" id="equationHelp">Use z, i, +, −, *, /, ^, parentheses, and sin, cos, exp, log or sqrt.</div>
+              <div class="equation-error" id="equationError" role="status"></div>
+            </div>
+            <div class="control-section presets-section" id="presetSection">
+              <div class="section-label"><span class="section-number">01</span> <span id="presetHeading">STARTING POINTS</span></div>
+              <div class="preset-list">
+                <button class="preset active" data-preset="classic" type="button"><span class="preset-art art-classic"></span><span><b>The origin</b><small>The classic view</small></span><span class="preset-arrow">↗</span></button>
+                <button class="preset" data-preset="seahorse" type="button"><span class="preset-art art-seahorse"></span><span><b>Seahorse valley</b><small>A delicate edge</small></span><span class="preset-arrow">↗</span></button>
+                <button class="preset" data-preset="spiral" type="button"><span class="preset-art art-spiral"></span><span><b>Into the spiral</b><small>A world within</small></span><span class="preset-arrow">↗</span></button>
+              </div>
+            </div>
+
+            <div class="control-section sliders-section">
+              <div class="section-label"><span>02</span> TUNE THE DETAILS</div>
+              <label class="range-control" for="iterations"><span class="range-title"><span id="detailLabel">Iteration depth</span><output id="iterationsValue">180</output></span><input id="iterations" type="range" min="40" max="1200" value="180" step="20" /><span class="range-ends"><span>Faster</span><span>More detail</span></span></label>
+              <label class="range-control" for="colorScale"><span class="range-title"><span id="colorLabel">Color rhythm</span><output id="colorScaleValue">1.0×</output></span><input id="colorScale" type="range" min="4" max="30" value="12" step="1" /><span class="range-ends"><span>Gentle</span><span>Wavy</span></span></label>
+            </div>
+
+            <div class="control-section palette-section">
+              <div class="section-label"><span id="paletteNumber">03</span> <span id="paletteHeading">CHOOSE A PALETTE</span></div>
+              <div class="palette-list" role="group" aria-label="Color palette">
+                <button class="palette-swatch active" data-palette="aurora" aria-label="Aurora" title="Aurora" type="button"><span class="swatch-aurora"></span></button>
+                <button class="palette-swatch" data-palette="ember" aria-label="Ember" title="Ember" type="button"><span class="swatch-ember"></span></button>
+                <button class="palette-swatch" data-palette="ocean" aria-label="Ocean" title="Ocean" type="button"><span class="swatch-ocean"></span></button>
+                <button class="palette-swatch" data-palette="mono" aria-label="Monochrome" title="Monochrome" type="button"><span class="swatch-mono"></span></button>
+              </div>
+            </div>
+
+            <button class="export-button" id="exportImage" type="button"><span>↓</span> DOWNLOAD IMAGE <i>PNG</i></button>
+            <div class="export-note">Your exploration, ready to keep.<br />Canvas resolution · no watermark.</div>
+          </aside>
+        </section>
+
+        <section class="below-fold" id="about">
+          <div class="equation-card"><span class="eyebrow-small" id="aboutEyebrow">THE RULE IS SIMPLE</span><div class="equation" id="aboutEquation">z<sub>n+1</sub> = z<sub>n</sub><sup>2</sup> + c</div><p id="aboutEquationCopy">Repeat this operation again and again. Color reveals which points escape to infinity and which remain in the set.</p></div>
+          <div class="about-copy"><span class="eyebrow-small">A UNIVERSE IN EVERY POINT</span><h2>A small rule.<br /><em>An endless edge.</em></h2><p id="aboutDescription">The Mandelbrot set asks what happens when a mathematical sequence repeats. Change one point, start again, and another boundary appears: intricate, surprising, always new.</p><p>Click to zoom, drag to explore, and play with the controls. This window is just a small doorway.</p></div>
+        </section>
+      </main>
+
+      <footer><a class="brand footer-brand" href="#"><span class="brand-mark">f</span><span>forma<span class="brand-dot">.</span></span></a><span>A SMALL STUDY OF INFINITY</span><span>MADE FOR A CLOSER LOOK <b>✳</b></span></footer>
+    </div>
+    <script src="app.js"></script>
+  </body>
+</html>

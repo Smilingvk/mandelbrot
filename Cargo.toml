@@ -1,0 +1,10 @@
+[package]
+name = "mandelbrot-lab"
+version = "0.1.0"
+edition = "2021"
+description = "A parallel Mandelbrot renderer and computational fractal lab"
+license = "MIT"
+
+[dependencies]
+image = { version = "0.25", default-features = false, features = ["png"] }
+rayon = "1.10"
