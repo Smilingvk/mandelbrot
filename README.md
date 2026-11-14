@@ -4,14 +4,23 @@ A small lab for exploring fractals. It combines an interactive browser experienc
 
 ## Explore in your browser
 
-Open `index.html` in a modern browser. No installation or server is required.
+Build the browser renderer with a Rust toolchain and the WASM target:
+
+```bash
+rustup target add wasm32-unknown-unknown
+cargo build --release --target wasm32-unknown-unknown --lib
+python3 -m http.server 8000
+```
+
+Then open `http://localhost:8000`. The browser UI sends render jobs to a Web Worker; the Rust WebAssembly module computes the fractal pixels and RGB colors. JavaScript handles controls, navigation, and drawing the returned pixel tiles.
 
 - Switch between the Mandelbrot set and Newton fractals.
 - Choose a Newton equation or enter your own function, such as `z^3 - 1`.
 - Supported syntax: `z`, `i`, `pi`, `e`, arithmetic operators, powers, parentheses, and `sin`, `cos`, `exp`, `log`, and `sqrt`.
-- Click or scroll to zoom, drag to pan, tune iteration depth and colors, and download the current view as a PNG.
+- Newton roots receive evenly spaced RGB hues ordered by their angle; you can also set a color for each root. Slow convergence darkens each root's color. Mandelbrot keeps its selectable palettes.
+- Click or scroll to zoom, Shift-click to zoom out, drag to pan, or use the `+` / `−` controls. Tune iteration depth and colors, then download the current view as a PNG.
 
-Rendering runs locally in a browser canvas. Deep views and complex Newton equations may take a few seconds to calculate.
+Rendering runs locally in a browser worker. Deep views and complex Newton equations may take a few seconds to calculate.
 
 ## Rust renderer
 

@@ -40,12 +40,16 @@
             <div class="canvas-wrap" id="canvasWrap">
               <canvas id="fractal" aria-label="Interactive fractal visualization"></canvas>
               <div class="canvas-loading" id="loading"><span class="loader-ring"></span><span>TRACING INFINITY</span></div>
-              <div class="canvas-hint" id="canvasHint"><span>＋</span> CLICK TO ZOOM <i></i> DRAG TO PAN</div>
+              <div class="canvas-hint" id="canvasHint"><span>＋</span> CLICK TO ZOOM <i></i> DRAG TO PAN <i></i> SHIFT-CLICK OUT</div>
               <div class="zoom-readout" id="zoomReadout">1.0×</div>
             </div>
             <div class="canvas-footline">
               <div class="coordinate-readout"><span class="foot-label">CENTER</span><span id="centerReadout">−0.500000, 0.000000i</span></div>
-              <button class="text-button" id="resetView" type="button"><span>↺</span> RESET VIEW</button>
+              <div class="view-actions" role="group" aria-label="View controls">
+                <button class="zoom-button" id="zoomOut" type="button" aria-label="Zoom out" title="Zoom out">−</button>
+                <button class="zoom-button" id="zoomIn" type="button" aria-label="Zoom in" title="Zoom in">+</button>
+                <button class="text-button" id="resetView" type="button"><span>↺</span> RESET VIEW</button>
+              </div>
             </div>
           </div>
 
@@ -79,17 +83,18 @@
             <div class="control-section sliders-section">
               <div class="section-label"><span>02</span> TUNE THE DETAILS</div>
               <label class="range-control" for="iterations"><span class="range-title"><span id="detailLabel">Iteration depth</span><output id="iterationsValue">180</output></span><input id="iterations" type="range" min="40" max="1200" value="180" step="20" /><span class="range-ends"><span>Faster</span><span>More detail</span></span></label>
-              <label class="range-control" for="colorScale"><span class="range-title"><span id="colorLabel">Color rhythm</span><output id="colorScaleValue">1.0×</output></span><input id="colorScale" type="range" min="4" max="30" value="12" step="1" /><span class="range-ends"><span>Gentle</span><span>Wavy</span></span></label>
+              <label class="range-control" id="colorRange" for="colorScale"><span class="range-title"><span id="colorLabel">Color rhythm</span><output id="colorScaleValue">1.0×</output></span><input id="colorScale" type="range" min="4" max="30" value="12" step="1" /><span class="range-ends"><span>Gentle</span><span>Wavy</span></span></label>
             </div>
 
-            <div class="control-section palette-section">
+            <div class="control-section palette-section" id="paletteSection">
               <div class="section-label"><span id="paletteNumber">03</span> <span id="paletteHeading">CHOOSE A PALETTE</span></div>
-              <div class="palette-list" role="group" aria-label="Color palette">
+              <div class="palette-list" id="paletteList" role="group" aria-label="Color palette">
                 <button class="palette-swatch active" data-palette="aurora" aria-label="Aurora" title="Aurora" type="button"><span class="swatch-aurora"></span></button>
                 <button class="palette-swatch" data-palette="ember" aria-label="Ember" title="Ember" type="button"><span class="swatch-ember"></span></button>
                 <button class="palette-swatch" data-palette="ocean" aria-label="Ocean" title="Ocean" type="button"><span class="swatch-ocean"></span></button>
                 <button class="palette-swatch" data-palette="mono" aria-label="Monochrome" title="Monochrome" type="button"><span class="swatch-mono"></span></button>
               </div>
+              <div class="root-color-note" id="rootColorNote" hidden><div id="rootColorInputs" class="root-color-inputs"></div><p>One hue per root. Slower convergence makes it darker.</p></div>
             </div>
 
             <button class="export-button" id="exportImage" type="button"><span>↓</span> DOWNLOAD IMAGE <i>PNG</i></button>
@@ -105,6 +110,6 @@
 
       <footer><a class="brand footer-brand" href="#"><span class="brand-mark">f</span><span>forma<span class="brand-dot">.</span></span></a><span>A SMALL STUDY OF INFINITY</span><span>MADE FOR A CLOSER LOOK <b>✳</b></span></footer>
     </div>
-    <script src="app.js"></script>
+    <script type="module" src="app.js"></script>
   </body>
 </html>
